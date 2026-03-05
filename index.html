@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Blast | Nadia 🔥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{
+  background:linear-gradient(to bottom,#1a0000,#000);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:2.4rem;
+  font-weight:700;
+  color:#ff4d6d;
+  background:black;
+  z-index:999;
+}
+
+/* CONTAINER */
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:40px 20px;
+  text-align:center;
+}
+
+/* HEADINGS */
+h1{
+  margin-top:40px;
+  font-size:2.3rem;
+  color:#ff6b81;
+  text-shadow:0 0 20px #ff4d6d;
+}
+
+.quote{
+  margin:20px auto;
+  max-width:700px;
+  font-size:1.1rem;
+  color:#ffc2d1;
+}
+
+/* TIMER */
+#countdown{
+  margin-top:20px;
+  font-size:1.4rem;
+  color:#ffb3c6;
+  text-shadow:0 0 10px #ff4d6d;
+}
+
+/* BUTTONS */
+button,.social a,.footer a{
+  display:inline-block;
+  margin:10px;
+  padding:12px 28px;
+  border-radius:30px;
+  background:#ff4d6d;
+  color:white;
+  text-decoration:none;
+  box-shadow:0 0 15px #ff4d6d;
+  border:none;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover,.social a:hover,.footer a:hover{transform:scale(1.05);}
+
+.social{margin-top:20px;}
+
+.gifs{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+.gifs img{
+  width:220px;
+  border-radius:16px;
+  box-shadow:0 0 15px #ff4d6d;
+}
+
+#wishes{
+  margin-top:60px;
+  padding:30px;
+  background:rgba(255,77,109,0.1);
+  border-radius:20px;
+}
+#wishes h2{color:#ffb3c6;}
+#wishes input,#wishes textarea{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+}
+.wish{
+  margin-top:15px;
+  padding:12px;
+  background:rgba(255,255,255,0.1);
+  border-radius:10px;
+  text-align:left;
+}
+.time{
+  font-size:0.8rem;
+  color:#ffb3c6;
+  margin-top:6px;
+}
+
+.heart,.rose{
+  position:fixed;
+  top:-10%;
+  font-size:22px;
+  animation:fall linear infinite;
+  pointer-events:none;
+}
+@keyframes fall{to{transform:translateY(120vh)}}
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+.footer{
+  margin-top:80px;
+  padding:30px 20px;
+  background:rgba(0,0,0,0.6);
+  border-top:1px solid rgba(255,77,109,0.4);
+  text-align:center;
+}
+.footer h3{
+  color:#ff6b81;
+  margin-bottom:10px;
+}
+.footer p{
+  font-size:0.9rem;
+  color:#ffc2d1;
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro">🎉 Happy Birthday Nadia 🎉</div>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+
+<h1>🔥 Birthday Season Begins 🔥</h1>
+
+<div id="countdown"></div>
+
+<div class="quote">
+“Born to stand out, not to fit in.  
+This isn’t just a birthday — it’s a legacy upgrade.”
+</div>
+
+<button onclick="playMusic()">▶ Play Birthday Vibe</button>
+
+<div class="social">
+
+  <div style="margin-bottom:10px;font-size:1.1rem;color:#ffc2d1;">
+    Wish me on WhatsApp 💬
+  </div>
+
+  <a href="https://wa.me/923141677721?text=Happy%20Birthday%20Nadia%20🔥🎉" target="_blank">
+    💚 WhatsApp
+  </a>
+
+</div>
+
+<div class="gifs">
+  <img src="https://media.giphy.com/media/26FPJGjhefSJuaRhu/giphy.gif">
+  <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif">
+  <img src="https://media.giphy.com/media/3oz8xRF0v9WMAUVLNK/giphy.gif">
+</div>
+
+<div id="wishes">
+  <h2>💌 Leave a Birthday Wish</h2>
+  <input id="name" placeholder="Your Name">
+  <textarea id="msg" placeholder="Your Wish"></textarea>
+  <button onclick="addWish()">Send Wish</button>
+  <div id="wishList"></div>
+</div>
+
+<div class="footer">
+  <h3>Made with ❤️ by Nadia</h3>
+</div>
+
+<audio id="song" loop preload="auto">
+  <source src="koretskoFF_-_Happy_birthday_TRAP_REMIX_(mp3.pm).mp3" type="audio/mpeg">
+</audio>
+
+<audio id="boom" preload="auto">
+  <source src="https://files.catbox.moe/2k6l1c.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* INTRO REMOVE */
+setTimeout(()=>intro.style.display="none",3000);
+
+/* COUNTDOWN TO 31 MARCH */
+const countdown=document.getElementById("countdown");
+const target=new Date("March 31, 2026 23:59:59").getTime();
+
+setInterval(()=>{
+  const now=new Date().getTime();
+  const diff=target-now;
+
+  if(diff<=0){
+    countdown.innerHTML="🎉 It's Nadia's Birthday Month 🎉";
+    return;
+  }
+
+  const days=Math.floor(diff/(1000*60*60*24));
+  const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+  const secs=Math.floor((diff%(1000*60))/1000);
+
+  countdown.innerHTML=`⏳ ${days}d ${hours}h ${mins}m ${secs}s left until 31 March`;
+},1000);
+
+/* MUSIC */
+function playMusic(){song.play();}
+
+/* WISHES */
+let wishes=JSON.parse(localStorage.getItem("wishes"))||[];
+const wishList=document.getElementById("wishList");
+wishes.forEach(w=>renderWish(w,false));
+
+function addWish(){
+ let n=document.getElementById("name").value.trim();
+ let m=document.getElementById("msg").value.trim();
+ if(!n||!m) return;
+ let w={name:n,msg:m,time:new Date().toLocaleString()};
+ wishes.unshift(w);
+ localStorage.setItem("wishes",JSON.stringify(wishes));
+ renderWish(w,true);
+ document.getElementById("name").value="";
+ document.getElementById("msg").value="";
+}
+
+function renderWish(w,prepend=true){
+ let d=document.createElement("div");
+ d.className="wish";
+ d.innerHTML=`<b>${w.name}</b><br>${w.msg}<div class="time">📅 ${w.time}</div>`;
+ if(prepend) wishList.prepend(d);
+ else wishList.appendChild(d);
+}
+
+/* RAIN */
+function rain(s,c){
+ let e=document.createElement("div");
+ e.className=c;e.innerHTML=s;
+ e.style.left=Math.random()*100+"vw";
+ e.style.animationDuration=(3+Math.random()*4)+"s";
+ document.body.appendChild(e);
+ setTimeout(()=>e.remove(),7000);
+}
+setInterval(()=>rain("❤️","heart"),400);
+setInterval(()=>rain("🌹","rose"),800);
+
+/* FIREWORKS + SOUND */
+const ctx=fireworks.getContext("2d");
+fireworks.width=innerWidth;fireworks.height=innerHeight;
+let p=[];
+setInterval(()=>{
+ let x=Math.random()*fireworks.width;
+ let y=Math.random()*fireworks.height/2;
+ boom.currentTime=0;boom.play();
+ for(let i=0;i<60;i++)
+   p.push({x,y,dx:(Math.random()-0.5)*6,dy:(Math.random()-0.5)*6,l:100});
+},1500);
+
+(function anim(){
+ ctx.clearRect(0,0,fireworks.width,fireworks.height);
+ p.forEach((o,i)=>{
+  o.x+=o.dx;o.y+=o.dy;o.l--;
+  ctx.fillStyle=`rgba(255,77,109,${o.l/100})`;
+  ctx.beginPath();
+  ctx.arc(o.x,o.y,2,0,Math.PI*2);
+  ctx.fill();
+  if(o.l<=0)p.splice(i,1);
+ });
+ requestAnimationFrame(anim);
+})();
+</script>
+
+</body>
+</html>
